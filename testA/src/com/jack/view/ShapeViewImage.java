@@ -95,7 +95,7 @@ public class ShapeViewImage extends ImageView{
 		width = getWidth();
 		height = getHeight();
 		Log.i(TAG, "view width -- " + width +" , height -- " + height);
-		
+		Log.i(TAG,"shape_type " + shape_type);
 		int radius = ((width < height) ? width : height ) / 2;
 		//如果是圆的情况
 		if("round".equals(shape_type)){
@@ -159,6 +159,7 @@ public class ShapeViewImage extends ImageView{
 		
 		width = bmp.getWidth();
 		height = bmp.getHeight();
+		Log.i(TAG, "picture width" + width + " height " + height);
 		square_length = (width < height) ? width : height;
 		Log.i(TAG, "切割到正方形目的尺寸size: " + square_length);
 		//高宽不等进行切割
@@ -171,6 +172,8 @@ public class ShapeViewImage extends ImageView{
 				location_x = (width - square_length) / 2;
 				location_y = 0;
 			}
+			Log.i(TAG	, "切割目标图片的起点坐标位置");
+			Log.i(TAG, "location_x -- " + location_x + "  location_y " + location_y);
 			squareBitmap = Bitmap.createBitmap(bmp, location_x, location_y, square_length, square_length);
 		//高宽相等不用切割
 		}else{
@@ -178,13 +181,13 @@ public class ShapeViewImage extends ImageView{
 		}
 		
 		//位图需要适应到组件里面去，进行缩放
-		Log.i(TAG, "创建切割到正方形目的尺寸size, width " + squareBitmap.getWidth() + " height " + squareBitmap.getHeight());
+		Log.i(TAG, "创建切割后正方形目的尺寸size, width " + squareBitmap.getWidth() + " height " + squareBitmap.getHeight());
 		if(squareBitmap.getWidth() != diameter || squareBitmap.getHeight() != diameter){
 			secBitmap = Bitmap.createScaledBitmap(squareBitmap, diameter, diameter, true);				//像素有可能发生变化
 		}else{
 			secBitmap = squareBitmap;
 		}
-		
+		Log.i(TAG, "secBitmap 自适应到组件里面的尺寸,width " + secBitmap.getWidth() + " height "+ secBitmap.getHeight());
 		//创建一个和目标位图的大小空白画布
 		Bitmap outputBitmap = Bitmap.createBitmap(secBitmap.getWidth(), secBitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(outputBitmap);
@@ -196,29 +199,30 @@ public class ShapeViewImage extends ImageView{
 		
 		//图形类型为五角星
 		if("star".equals(shape_type)){
+			Log.i(TAG, "我们要画一个五角星");
 			Path path = new Path();
 			
 			float radians = degreeToRadian(36);					//五角星外面三角形的角度 转换为幅度
 			float half_radians = radians / 2;
-			float in_radius = (float)((Math.sin(half_radians) * radius ) / Math.cos(radians));					//计算内五边形的半径，是包容內五边形的圆，不是内切五边形的圆
-			
+			float in_radius = Math.abs((float)((Math.sin(half_radians) * radius ) / Math.cos(radians)));					//计算内五边形的半径，是包容內五边形的圆，不是内切五边形的圆
+			Log.i(TAG, "内切圆半径是: " + in_radius  + " 外圆半径 " + radius);
 			/**
 			 * 确定五角星的轨迹  标记路径上的每个点并连接起来  从五角星头上那个点开始，从左到右  从上到下连接五角星轨迹
 			 */
-			star_x[0] = (float)(Math.cos(half_radians) * radius);
+			star_x[0] = Math.abs((float)(Math.cos(half_radians) * radius));
 			star_y[0] = 0;
 			
-			star_x[1] = (float)(star_x[0] + in_radius * Math.sin(radians));
-			star_y[1] = (float)(radians - Math.cos(radians) * in_radius);
+			star_x[1] = (float)(star_x[0] + Math.abs(in_radius * Math.sin(radians)));
+			star_y[1] = (float)(radius - Math.abs(Math.cos(radians) * in_radius));
 			
 			star_x[2] = star_x[0] + star_x[0];
 			star_y[2] = star_y[1];
 			
-			star_x[3] = (float)(star_x[0] + Math.sin(half_radians) * star_x[1]);
-			star_y[3] = (float)(Math.cos(half_radians) * star_x[1]);
+			star_x[3] = (float)(star_x[0] + Math.abs(Math.sin(half_radians) * star_x[1]));
+			star_y[3] = Math.abs((float)(Math.cos(half_radians) * star_x[1]));
 				
-			star_x[4] = (float)(star_x[0] + Math.sin(half_radians) * star_x[2]);
-			star_y[4] = (float)(Math.cos(half_radians) * star_x[2]);
+			star_x[4] = (float)(star_x[0] + Math.abs(Math.sin(half_radians) * star_x[2]));
+			star_y[4] = Math.abs((float)(Math.cos(half_radians) * star_x[2]));
 			
 			star_x[5] = star_x[0];
 			star_y[5] = (float)(radius + in_radius);
@@ -236,7 +240,9 @@ public class ShapeViewImage extends ImageView{
 			star_y[9] = star_y[2];
 			
 			path.moveTo(star_x[0], star_y[0]);									//	确定五角星顶上的那个点  以此为七点开始作画
+			Log.i(TAG,"坐标  0"   + " 是 "+ star_x[0] + " -- " + star_y[0]);
 			for(int i = 1; i < star_x.length; i++){
+				Log.i(TAG,"坐标 " + i + " 是 "+ star_x[i] + " -- " + star_y[i]);
 				path.lineTo(star_x[i], star_y[i]);
 			}
 			path.close();														//封闭五角星曲线
