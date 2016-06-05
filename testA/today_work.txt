@@ -1,0 +1,16 @@
+分享，推送，统计功能如何实现
+
+屏幕录像要学会
+
+18623080234周杨  你说黄涛
+
+1. 逆向工程  软件逆向静态分析/动态调试/代码跟踪
+2. android安全机制，root机制  打包  反编译  破解流程
+3. 熟悉逆向工具  smali dedexder dexdump apktool dex2jar jd-gui ida  ----  《任子行》
+
+
+1. tcp/udp xmpp http  webservice sqlite android线程消息机制
+
+2. 高性能 网络变成  多线程
+
+3. android 的webapi android本地存储  android自定义控件  aidl android动画android动画
