@@ -266,7 +266,7 @@ public class ShapeViewImage extends ImageView{
 			path.close();		
 			canvas.drawPath(path, paint);
 		}else{														//默认图形 形
-			canvas.drawCircle(secBitmap.getWidth(), secBitmap.getHeight(), secBitmap.getWidth(), paint);
+			canvas.drawCircle(secBitmap.getWidth() / 2, secBitmap.getHeight() / 2, secBitmap.getWidth() / 2, paint);
 		}
 		
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));								//取两层绘制交集   显示上层
